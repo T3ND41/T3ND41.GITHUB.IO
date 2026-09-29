@@ -415,6 +415,12 @@
 
     function render() {
       var list = products.filter(matches);
+      if (state.q) {
+        list.sort(function (a, b) { return searchScore(b, state.q) - searchScore(a, state.q); });
+        grid.setAttribute('aria-label', 'Products matching ' + state.q + ', most relevant first');
+      } else {
+        grid.removeAttribute('aria-label');
+      }
       var counter = document.getElementById('result-count');
       if (counter) counter.textContent = list.length + (list.length === 1 ? ' product' : ' products');
       grid.innerHTML = list.length
@@ -453,6 +459,17 @@
       if (known && fbox) btn = fbox.querySelector('[data-cat="' + known.id + '"]');
     }
     if (btn) btn.click(); else render();
+
+    // A search launched elsewhere on the site should land on the actual
+    // matching cards rather than at the catalogue introduction.
+    if (state.q) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var target = grid.querySelector('.product') || document.getElementById('empty');
+          if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+      });
+    }
   }
 
   /* ---------------- add-to-quotation picker ----------------
@@ -996,7 +1013,9 @@
       nav.style.setProperty('--notch-x', ((nextIndex + 0.5) / NAV_TABS.length * 100).toFixed(2) + '%');
       nav.classList.add('is-hopping');
 
-      setTimeout(function () { location.href = href; }, 760);
+      // Start the page change near the top of the hop so the two motions
+      // overlap as one transition instead of feeling like hop, pause, load.
+      setTimeout(function () { location.href = href; }, 240);
     });
 
     document.addEventListener('quote:change', paint);
@@ -1031,6 +1050,27 @@
     });
   }
 
+  /* ---------------- intentional page transitions ---------------- */
+  function initPageTransitions() {
+    // Cross-document View Transitions handle modern browsers. This small
+    // fallback gives other browsers the same purposeful exit without delaying
+    // modified clicks, downloads, external links, hashes or the hopping nav.
+    if ('startViewTransition' in document) return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href]');
+      if (!a || a.closest('.hn-nav') || e.defaultPrevented || e.button !== 0 ||
+          e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' ||
+          a.hasAttribute('download')) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (err) { return; }
+      if (url.origin !== location.origin || url.protocol.indexOf('http') !== 0 ||
+          (url.pathname === location.pathname && url.search === location.search && url.hash)) return;
+      e.preventDefault();
+      document.documentElement.classList.add('page-is-leaving');
+      setTimeout(function () { location.href = url.href; }, 170);
+    });
+  }
+
   /* ---------------- boot ---------------- */
   // exposed so a single-page preview can re-run it after swapping <main>
   window.hanekomBoot = function () {
@@ -1042,6 +1082,7 @@
     initBottomNav();
     initForms();
     initFloatingContact();
+    initPageTransitions();
     initReveal();
     var y = document.getElementById('year');
     if (y) y.textContent = new Date().getFullYear();
