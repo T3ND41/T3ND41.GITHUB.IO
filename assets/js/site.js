@@ -226,6 +226,93 @@
   }
   window.hanekomCard = card;
 
+  /* Plain-language catalogue search.
+     Buyers often know the hazard (dust, noise, rain, height) or a familiar
+     name (overalls, helmet, gum boots), not the catalogue term. These groups
+     add those intentions to each product without changing its public copy. */
+  var SEARCH_INTENTS = {
+    workwear: 'work suit worksuit overalls overall boiler suit uniform clothes clothing protective clothing coverall coveralls body protection work clothes',
+    hivis: 'high visibility hi vis hivis reflective reflector visibility vest traffic road roadside night low light be seen jacket cold winter warm',
+    hand: 'hand hands glove gloves grip cut resistant sharp metal handling welding heat hand protection',
+    respiratory: 'breathing breath lungs lung mask masks face mask dust dusty smoke fumes particles particulate respirator respiratory protection ffp2 ffp3',
+    eye: 'eye eyes glasses goggles spectacles face shield visor sparks grinding welding splash eye protection face protection',
+    head: 'head helmet helmets hardhat hard hat safety helmet falling objects impact head protection',
+    hearing: 'ear ears hearing noise noisy loud sound earmuff earmuffs ear muff ear muffs earplug earplugs ear plug ear plugs',
+    foot: 'foot feet shoe shoes boot boots safety boot steel toe toe cap footwear gumboot gumboots gum boot gum boots rubber boot waterproof rain wet mud',
+    gumboots: 'foot feet boot boots gumboot gumboots gum boot gum boots rubber boot rubber boots waterproof water resistant rain wet muddy mud wash down farm farming',
+    body: 'body leg legs apron aprons spat spats gaiter gaiters welding sparks heat coverall coveralls disposable splash chemical',
+    harness: 'height heights high roof roofing scaffold scaffolding climbing tower fall falling fall arrest body harness safety harness working at height',
+    lanyards: 'height heights lanyard lanyards rope connector karabiner carabiner tool tether dropped objects energy absorber scaffold fall protection',
+    srl: 'height heights lifeline life line retractable block inertia reel fall arrester fall arrest roof scaffold climbing working at height'
+  };
+  var SEARCH_PHRASES = {
+    'acid': 'chemical chemicals splash corrosion resistant workwear worksuit',
+    'chemical': 'acid splash resistant workwear worksuit gloves goggles',
+    'fire': 'flame heat hot welding fire resistant retardant workwear worksuit',
+    'flame': 'fire heat hot welding resistant retardant workwear worksuit',
+    'welding': 'welder sparks heat fire gloves helmet shield mask workwear',
+    'construction': 'hard hat helmet boots gloves vest harness height',
+    'mining': 'boots gumboots hard hat helmet respirator mask hearing vest workwear harness',
+    'rain': 'wet waterproof gumboot gumboots boots jacket',
+    'dust': 'mask respirator respiratory breathing particles ffp2 ffp3',
+    'noise': 'hearing ear earmuff earmuffs earplug earplugs',
+    'loud': 'noise hearing ear earmuff earmuffs earplug earplugs',
+    'height': 'harness lanyard lifeline fall arrest retractable block scaffold roof climbing',
+    'fall': 'harness lanyard lifeline arrester height scaffold roof climbing',
+    'sharp': 'cut resistant gloves hand protection',
+    'visibility': 'reflective high vis hivis vest traffic road night',
+    'cold': 'winter warm jacket outerwear'
+  };
+
+  function searchNormalise(value) {
+    return str(value).toLowerCase().replace(/&/g, ' and ')
+      .replace(/[^a-z0-9]+/g, ' ').replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+  }
+  function editDistance(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 3;
+    var row = [], prev = [], i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      row = [i];
+      for (j = 1; j <= b.length; j++) {
+        row[j] = Math.min(row[j - 1] + 1, prev[j] + 1,
+          prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      }
+      prev = row;
+    }
+    return prev[b.length];
+  }
+  function searchHaystack(p) {
+    var base = [p.code, p.name, p.variant, p.brand, p.desc, p.tag, SEARCH_INTENTS[p.cat] || ''].join(' ');
+    var n = searchNormalise(base);
+    Object.keys(SEARCH_PHRASES).forEach(function (term) {
+      if ((' ' + n + ' ').indexOf(' ' + term + ' ') > -1) n += ' ' + SEARCH_PHRASES[term];
+    });
+    return n;
+  }
+  function searchScore(p, query) {
+    var q = searchNormalise(query);
+    if (!q) return 1;
+    var hay = searchHaystack(p);
+    if ((' ' + hay + ' ').indexOf(' ' + q + ' ') > -1) return 100;
+    var stop = ['a','an','and','for','from','in','my','of','on','the','to','with','area','areas','work','working','need','protection'];
+    var needles = q.split(' ').filter(function (x, i, all) {
+      return x.length > 1 && stop.indexOf(x) < 0 && all.indexOf(x) === i;
+    });
+    var words = hay.split(' '), hits = 0;
+    needles.forEach(function (needle) {
+      if (words.indexOf(needle) > -1) { hits++; return; }
+      if (needle.length < 4) return;
+      var close = words.some(function (word) {
+        return word.length >= 4 && Math.abs(word.length - needle.length) <= 1 && editDistance(word, needle) <= 1;
+      });
+      if (close) hits += .72;
+    });
+    return needles.length ? hits / needles.length : 0;
+  }
+  window.hanekomSearchScore = searchScore;
+  window.hanekomSearchHaystack = searchHaystack;
+
   /* ---------------- catalogue page ---------------- */
   function initCatalogue() {
     var grid = document.getElementById('product-grid');
@@ -261,7 +348,7 @@
       search.addEventListener('input', function () {
         clearTimeout(t);
         t = setTimeout(function () {
-          state.q = search.value.trim().toLowerCase();
+          state.q = search.value.trim();
           render();
         }, 140);
       });
@@ -270,8 +357,7 @@
     function matches(p) {
       if (state.cat !== 'all' && p.cat !== state.cat) return false;
       if (!state.q) return true;
-      return (p.code + ' ' + p.name + ' ' + (p.variant || '') + ' ' + p.brand + ' ' + p.desc + ' ' + p.tag)
-        .toLowerCase().indexOf(state.q) > -1;
+      return searchScore(p, state.q) >= .6;
     }
 
     function render() {
@@ -283,6 +369,13 @@
         : '';
       var empty = document.getElementById('empty');
       if (empty) empty.hidden = list.length > 0;
+      var emptyQuery = document.getElementById('empty-query');
+      if (emptyQuery) emptyQuery.textContent = state.q ? '\u201c' + state.q + '\u201d' : 'that item';
+      var emptyWa = document.getElementById('empty-wa');
+      if (emptyWa) {
+        var msg = 'Hello Hanekom, I searched your PPE catalogue for "' + (state.q || 'an item') + '" but could not find a suitable match. Please help me choose or source the right product.';
+        emptyWa.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg);
+      }
       grid.hidden = list.length === 0;
     }
 
