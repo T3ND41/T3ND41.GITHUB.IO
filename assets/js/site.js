@@ -313,6 +313,22 @@
   window.hanekomSearchScore = searchScore;
   window.hanekomSearchHaystack = searchHaystack;
 
+  /* ---------------- site-wide PPE search ---------------- */
+  function initGlobalSearch() {
+    if (document.querySelector('.site-search-strip')) return;
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var strip = document.createElement('div');
+    strip.className = 'site-search-strip';
+    strip.innerHTML =
+      '<form action="products.html" method="get" role="search" aria-label="Search PPE from any page">' +
+        '<label for="global-ppe-search">Find PPE</label>' +
+        '<input type="search" id="global-ppe-search" name="q" placeholder="Describe the job or hazard&hellip;" autocomplete="off" spellcheck="true" required>' +
+        '<button type="submit" aria-label="Search PPE catalogue">Search</button>' +
+      '</form>';
+    header.insertAdjacentElement('afterend', strip);
+  }
+
   /* ---------------- catalogue page ---------------- */
   function initCatalogue() {
     var grid = document.getElementById('product-grid');
@@ -354,6 +370,15 @@
       });
     }
 
+    // A homepage search arrives as products.html?q=plain+language+request.
+    // Populate the catalogue field and apply the same intent-aware matching.
+    var query = '';
+    try { query = new URLSearchParams(location.search).get('q') || ''; } catch (e) {}
+    if (query && search) {
+      state.q = query.trim();
+      search.value = state.q;
+    }
+
     function matches(p) {
       if (state.cat !== 'all' && p.cat !== state.cat) return false;
       if (!state.q) return true;
@@ -382,7 +407,7 @@
     // The build pre-renders the full grid into the HTML so crawlers and
     // no-JS visitors see every product. Leave it alone until the visitor
     // actually filters or searches.
-    if (grid.dataset.prerendered === 'true' && !location.hash) {
+    if (grid.dataset.prerendered === 'true' && !location.hash && !state.q) {
       grid.dataset.prerendered = 'used';
       return;
     }
@@ -970,6 +995,7 @@
   // exposed so a single-page preview can re-run it after swapping <main>
   window.hanekomBoot = function () {
     initNav();
+    initGlobalSearch();
     paintCount();
     initCatalogue();
     initQuotePicker();
