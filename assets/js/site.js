@@ -908,7 +908,8 @@
     { href:'products.html',  label:'Products', icon:'#i-products' },
     { href:'quote.html',     label:'Quote',    icon:'#i-quote', badge:true },
     { href:'resources.html', label:'Guides',   icon:'#i-guides' },
-    { href:'contact.html',   label:'Contact',  icon:'#i-contact' }
+    { href:'contact.html',   label:'Contact',  icon:'#i-contact' },
+    { label:'Search', search:true }
   ];
   // pages that belong under a tab even though they are not the tab itself
   var NAV_ALIAS = {
@@ -941,6 +942,11 @@
     function paint() {
       nav.querySelector('.hn-items').innerHTML = NAV_TABS.map(function (t, i) {
         var on = i === active;
+        if (t.search) {
+          return '<button type="button" class="hn-item hn-search-item" data-i="' + i + '" data-search-nav aria-label="Open site search">' +
+                 '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.6"></circle><path d="m15.8 15.8 5 5"></path></svg>' +
+                 '<span class="lbl">Search</span></button>';
+        }
         return '<a class="hn-item" href="' + t.href + '"' + (on ? ' aria-current="page"' : '') +
                ' data-i="' + i + '">' +
                  '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="' + t.icon + '"></use></svg>' +
@@ -971,6 +977,12 @@
     nav.addEventListener('click', function (e) {
       var item = e.target.closest('.hn-item');
       if (!item || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (item.hasAttribute('data-search-nav')) {
+        e.preventDefault();
+        var trigger = document.querySelector('.nav-search-trigger');
+        if (trigger) trigger.click();
+        return;
+      }
       var nextIndex = +item.dataset.i;
       if (nextIndex === active || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
