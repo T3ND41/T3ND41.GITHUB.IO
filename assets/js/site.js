@@ -318,15 +318,43 @@
     if (document.querySelector('.site-search-strip')) return;
     var header = document.querySelector('.site-header');
     if (!header) return;
+    var links = header.querySelector('.nav-links');
     var strip = document.createElement('div');
     strip.className = 'site-search-strip';
+    strip.id = 'site-search-panel';
+    strip.hidden = true;
     strip.innerHTML =
       '<form action="products.html" method="get" role="search" aria-label="Search PPE from any page">' +
-        '<label for="global-ppe-search">Find PPE</label>' +
-        '<input type="search" id="global-ppe-search" name="q" placeholder="Describe the job or hazard&hellip;" autocomplete="off" spellcheck="true" required>' +
+        '<label for="global-ppe-search">Search PPE, hazards or tasks</label>' +
+        '<input type="search" id="global-ppe-search" name="q" placeholder="Try: dust mask, welding, loud area, boots for rain&hellip;" autocomplete="off" spellcheck="true" required>' +
         '<button type="submit" aria-label="Search PPE catalogue">Search</button>' +
       '</form>';
     header.insertAdjacentElement('afterend', strip);
+    if (!links) return;
+    var trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'nav-search-trigger';
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', strip.id);
+    trigger.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"></circle><path d="m16 16 5 5"></path></svg><span>Search</span>';
+    var quote = links.querySelector('.quote-pill');
+    links.insertBefore(trigger, quote || null);
+    var input = strip.querySelector('input');
+    function closeSearch() {
+      strip.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.classList.remove('is-open');
+    }
+    trigger.addEventListener('click', function () {
+      var open = strip.hidden;
+      strip.hidden = !open;
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      trigger.classList.toggle('is-open', open);
+      if (open) setTimeout(function () { input.focus(); }, 0);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !strip.hidden) { closeSearch(); trigger.focus(); }
+    });
   }
 
   /* ---------------- catalogue page ---------------- */
