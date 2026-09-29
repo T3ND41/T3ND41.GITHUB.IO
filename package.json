@@ -1,0 +1,10 @@
+{
+  "name": "hanekom-github-pages-preview",
+  "private": true,
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  }
+}

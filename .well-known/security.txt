@@ -1,0 +1,4 @@
+Contact: mailto:sales@hanekom.co.zm
+Expires: 2027-01-01T00:00:00Z
+Preferred-Languages: en
+Canonical: https://www.hanekom.co.zm/.well-known/security.txt

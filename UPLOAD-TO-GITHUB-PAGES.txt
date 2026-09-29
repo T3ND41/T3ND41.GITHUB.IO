@@ -1,0 +1,15 @@
+HANEKOM WEBSITE — GITHUB PAGES UPLOAD
+
+This ZIP is arranged so that index.html and the assets folder sit at the
+website root. Extract the ZIP first; do not upload only the ZIP file.
+
+For the existing t3nd41.github.io site:
+1. Open the repository that publishes https://t3nd41.github.io/.
+2. Upload the extracted website files and folders to the repository root.
+   Keep index.html beside the assets folder. Do not put them inside a new
+   hanekom-github-pages subfolder.
+3. Commit the upload to the branch and folder selected in Settings > Pages.
+4. Wait for the Pages deployment to finish, then hard-refresh with Ctrl+F5.
+
+The pages use relative paths such as assets/css/style.min.css, so the assets
+folder must be uploaded with its exact lowercase spelling and hierarchy.
