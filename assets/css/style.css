@@ -84,9 +84,8 @@ body{
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 
-/* Branded page loader. Both transparent images share one original canvas, so
-   their alignment stays exact. The gear rotates around its real centre rather
-   than the centre of the transparent PNG canvas. */
+/* Branded page loader. The official combined mark moves as one unit so the
+   hard hat and gear always stay perfectly aligned. */
 .site-loader{
   position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
   background:radial-gradient(circle at 50% 46%,rgba(140,200,95,.12),transparent 34%),var(--ground-2);
@@ -94,19 +93,30 @@ body{
   transition:opacity .2s ease-out,visibility 0s linear .2s;
 }
 .site-loader.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
-.site-loader-mark{position:relative;width:clamp(150px,18vw,205px);aspect-ratio:796/916}
-.site-loader-gear,.site-loader-hardhat{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.site-loader-gear{transform-origin:52.83% 70.80%;animation:loader-gear-spin 2.4s linear infinite}
-.site-loader-hardhat{z-index:2;animation:loader-hat-settle .9s ease-in-out infinite alternate}
-.site-loader-shadow{
-  position:absolute;z-index:1;left:24%;right:19%;bottom:5.5%;height:7%;border-radius:50%;
-  background:rgba(0,0,0,.52);filter:blur(9px);animation:loader-shadow-pulse .9s ease-in-out infinite alternate;
+.site-loader-mark{
+  position:relative;width:clamp(138px,18vw,192px);aspect-ratio:1;
+  display:grid;place-items:center;filter:drop-shadow(0 12px 18px rgba(0,0,0,.24));
+  animation:loader-logo-hop 1.15s cubic-bezier(.45,.05,.55,.95) infinite;
 }
-@keyframes loader-gear-spin{to{transform:rotate(360deg)}}
-@keyframes loader-hat-settle{from{transform:translateY(-1px) rotate(-.25deg)}to{transform:translateY(2px) rotate(.25deg)}}
-@keyframes loader-shadow-pulse{from{opacity:.48;transform:scaleX(.92)}to{opacity:.72;transform:scaleX(1.04)}}
+.site-loader-wheel,.site-loader-hat{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.site-loader-wheel{z-index:1;transform-origin:52.7% 64.8%;animation:loader-wheel-spin 2.2s linear infinite}
+.site-loader-hat{z-index:2;transform:translateY(18px)}
+.site-loader-shadow{
+  position:absolute;z-index:1;left:17%;right:17%;bottom:-9%;height:8%;border-radius:50%;
+  background:rgba(0,0,0,.5);filter:blur(9px);animation:loader-shadow-pulse 1.15s ease-in-out infinite;
+}
+@keyframes loader-logo-hop{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  48%{transform:translateY(-12px) rotate(1deg)}
+  58%{transform:translateY(-12px) rotate(1deg)}
+}
+@keyframes loader-wheel-spin{to{transform:rotate(360deg)}}
+@keyframes loader-shadow-pulse{
+  0%,100%{opacity:.68;transform:scaleX(1)}
+  48%,58%{opacity:.34;transform:scaleX(.72)}
+}
 @media (prefers-reduced-motion:reduce){
-  .site-loader,.site-loader-gear,.site-loader-hardhat,.site-loader-shadow{animation:none;transition:none}
+  .site-loader,.site-loader-mark,.site-loader-wheel,.site-loader-shadow{animation:none;transition:none}
 }
 
 /* Atmosphere: a fixed, heavily blurred site photograph so the glass
