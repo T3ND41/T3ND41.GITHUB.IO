@@ -1015,7 +1015,11 @@
 
       // Start the page change near the top of the hop so the two motions
       // overlap as one transition instead of feeling like hop, pause, load.
-      setTimeout(function () { location.href = href; }, 240);
+      // Fast desktops need a little more time to display the hop before the
+      // next document replaces the current one. Touch devices keep the faster
+      // timing that already feels right on mobile.
+      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      setTimeout(function () { location.href = href; }, desktopPointer ? 350 : 240);
     });
 
     document.addEventListener('quote:change', paint);

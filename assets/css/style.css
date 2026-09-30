@@ -87,6 +87,14 @@ body::after{
 }
 
 img{max-width:100%;height:auto;display:block}
+
+/* Let the browser skip paint/layout work for content that is far below the
+   viewport. The remembered intrinsic size keeps long catalogue pages stable
+   while sections and cards are being deferred. */
+@supports (content-visibility:auto){
+  main>section:not(.hero),.site-footer{content-visibility:auto;contain-intrinsic-block-size:auto 720px}
+  .product-grid .product{content-visibility:auto;contain-intrinsic-size:auto 540px}
+}
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline}
 h1,h2,h3,h4{color:var(--text);line-height:1.16;margin:0 0 .5em;font-weight:800;letter-spacing:-.022em;text-wrap:balance}
@@ -909,6 +917,7 @@ body{padding-top:146px;padding-bottom:0}
 .hn-nav.is-hopping .hn-item.is-next{
   animation:hn-nav-button-hop .42s cubic-bezier(.22,.78,.28,1);
 }
+.hn-nav.is-hopping .hn-puck,.hn-nav.is-hopping .hn-item.is-next{will-change:transform}
 @keyframes hn-nav-hop-forward{
   0%{transform:translateY(0) rotate(0) scale(1,1)}
   18%{transform:translateY(-18px) rotate(8deg) scale(.96,1.05)}
@@ -944,6 +953,12 @@ body{padding-top:146px;padding-bottom:0}
 @media (max-width:380px){
   .hn-nav{width:calc(100% - 16px)}.hn-item .lbl{font-size:9.5px}.hn-puck{width:68px;height:68px;margin-left:-34px;top:7px}.hn-puck::after{inset:-7px;border-width:6px}
   .hn-item .ico{width:23px;height:23px}.hn-grip{width:96px}
+}
+
+/* Preserve the glass treatment on smaller GPUs with less costly blur. */
+@media (max-width:700px){
+  .hn-bar,.hn-puck{-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+  body::after{filter:blur(16px) saturate(.55) brightness(.42)}
 }
 
 /* ==========================================================================
