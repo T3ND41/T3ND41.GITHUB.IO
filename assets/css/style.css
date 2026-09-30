@@ -930,8 +930,12 @@ body{padding-top:146px;padding-bottom:0}
   background:rgba(244,250,240,.76);border:1px solid rgba(255,255,255,.88);
   -webkit-backdrop-filter:blur(22px) saturate(1.35);backdrop-filter:blur(22px) saturate(1.35);
   box-shadow:0 16px 42px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.72);
-  -webkit-mask-image:radial-gradient(circle 47px at var(--notch-x) 0,transparent 46px,#000 47px);
-          mask-image:radial-gradient(circle 47px at var(--notch-x) 0,transparent 46px,#000 47px);
+  /* A broad elliptical cradle gives the active bubble a smooth, flowing seat.
+     The feathered edge removes the harsh one-pixel rim of the old round cutout. */
+  -webkit-mask-image:radial-gradient(ellipse 62px 46px at var(--notch-x) 0,
+    transparent 0 42px,rgba(0,0,0,.14) 43px,rgba(0,0,0,.58) 45px,#000 47px);
+          mask-image:radial-gradient(ellipse 62px 46px at var(--notch-x) 0,
+    transparent 0 42px,rgba(0,0,0,.14) 43px,rgba(0,0,0,.58) 45px,#000 47px);
 }
 .hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:7px 8px 17px}
 .hn-item{
