@@ -1019,6 +1019,10 @@
       var nextIndex = +item.dataset.i;
       if (nextIndex === active || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+      // Desktop uses an immediate click with the lightweight page transition.
+      // Keep the expressive hop only on touch/mobile devices where it is useful feedback.
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
       e.preventDefault();
       var href = item.href;
       nav.querySelectorAll('.hn-item.is-next').forEach(function (el) { el.classList.remove('is-next'); });

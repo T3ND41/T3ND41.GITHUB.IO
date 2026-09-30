@@ -62,6 +62,7 @@ main{view-transition-name:page-content;animation:page-arrive var(--motion-beat) 
 @media (hover:hover) and (pointer:fine){
   main{animation:desktop-page-arrive var(--motion-beat) ease-out both}
   .site-header,.hn-nav{view-transition-name:none}
+  .hn-nav.is-hopping .hn-puck,.hn-nav.is-hopping .hn-item.is-next{animation:none}
   ::view-transition-group(root){animation-duration:var(--motion-beat);animation-timing-function:ease-out}
   ::view-transition-old(page-content){animation:desktop-page-out .18s ease-out both}
   ::view-transition-new(page-content){animation:desktop-page-in var(--motion-beat) ease-out both}
