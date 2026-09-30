@@ -1070,6 +1070,43 @@
     });
   }
 
+  /* ---------------- branded loading screen ---------------- */
+  function initSiteLoader() {
+    var loader = document.getElementById('site-loader');
+    if (!loader) return;
+    var hidden = false;
+
+    function hideLoader() {
+      if (hidden) return;
+      hidden = true;
+      loader.classList.add('is-hidden');
+    }
+    function showForNavigation(e) {
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey ||
+          e.shiftKey || e.altKey || a.target === '_blank' || a.hasAttribute('download')) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (err) { return; }
+      if (url.origin !== location.origin || url.protocol.indexOf('http') !== 0 ||
+          (url.pathname === location.pathname && url.search === location.search && url.hash)) return;
+      // Let the navigation button begin its hop before the overlay covers it.
+      // Other links get only a tiny acknowledgement delay.
+      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      var delay = a.closest('.hn-nav') ? (desktopPointer ? 170 : 100) : 70;
+      setTimeout(function () {
+        hidden = false;
+        loader.classList.remove('is-hidden');
+      }, delay);
+    }
+
+    window.addEventListener('load', function () {
+      requestAnimationFrame(function () { requestAnimationFrame(hideLoader); });
+    }, { once: true });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) hideLoader(); });
+    document.addEventListener('click', showForNavigation, true);
+    setTimeout(hideLoader, 2500); // never trap a visitor if an asset stalls
+  }
+
   /* ---------------- intentional page transitions ---------------- */
   function initPageTransitions() {
     // Cross-document View Transitions handle modern browsers. This small
@@ -1095,6 +1132,7 @@
   /* ---------------- boot ---------------- */
   // exposed so a single-page preview can re-run it after swapping <main>
   window.hanekomBoot = function () {
+    initSiteLoader();
     initNav();
     initGlobalSearch();
     paintCount();

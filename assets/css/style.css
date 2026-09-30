@@ -84,6 +84,31 @@ body{
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 
+/* Branded page loader. Both transparent images share one original canvas, so
+   their alignment stays exact. The gear rotates around its real centre rather
+   than the centre of the transparent PNG canvas. */
+.site-loader{
+  position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 46%,rgba(140,200,95,.12),transparent 34%),var(--ground-2);
+  opacity:1;visibility:visible;pointer-events:auto;
+  transition:opacity .2s ease-out,visibility 0s linear .2s;
+}
+.site-loader.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.site-loader-mark{position:relative;width:clamp(150px,18vw,205px);aspect-ratio:796/916}
+.site-loader-gear,.site-loader-hardhat{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.site-loader-gear{transform-origin:52.83% 70.80%;animation:loader-gear-spin 2.4s linear infinite}
+.site-loader-hardhat{z-index:2;animation:loader-hat-settle .9s ease-in-out infinite alternate}
+.site-loader-shadow{
+  position:absolute;z-index:1;left:24%;right:19%;bottom:5.5%;height:7%;border-radius:50%;
+  background:rgba(0,0,0,.52);filter:blur(9px);animation:loader-shadow-pulse .9s ease-in-out infinite alternate;
+}
+@keyframes loader-gear-spin{to{transform:rotate(360deg)}}
+@keyframes loader-hat-settle{from{transform:translateY(-1px) rotate(-.25deg)}to{transform:translateY(2px) rotate(.25deg)}}
+@keyframes loader-shadow-pulse{from{opacity:.48;transform:scaleX(.92)}to{opacity:.72;transform:scaleX(1.04)}}
+@media (prefers-reduced-motion:reduce){
+  .site-loader,.site-loader-gear,.site-loader-hardhat,.site-loader-shadow{animation:none;transition:none}
+}
+
 /* Atmosphere: a fixed, heavily blurred site photograph so the glass
    surfaces have something real to refract instead of flat colour. */
 body::before{
