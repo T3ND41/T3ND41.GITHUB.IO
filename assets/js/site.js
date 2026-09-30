@@ -64,6 +64,20 @@
     };
   }
 
+  // Pages such as Contact and the PPE guides deliberately do not download
+  // products.js. They still need to show the number of saved quote lines.
+  // Keep a bounded, non-rendered copy of those lines until a catalogue page
+  // can validate size and colour against the actual product options.
+  function cleanPortableLine(v) {
+    if (v === null || typeof v !== 'object' || Array.isArray(v)) v = { q: v };
+    var n = parseInt(str(v.q).replace(/[^0-9]/g, ''), 10);
+    return {
+      q: isFinite(n) && n > 0 ? Math.min(n, MAX_QTY) : 1,
+      s: str(v.s).slice(0, MAX_TEXT),
+      c: str(v.c).slice(0, MAX_TEXT)
+    };
+  }
+
   var mem = null;                              // fallback when storage is blocked
   function read() {
     if (mem) return mem;
@@ -75,8 +89,10 @@
     var out = {};
     Object.keys(parsed).slice(0, MAX_LINES).forEach(function (code) {
       var p = byCode(code);
-      if (!p) return;                          // unknown code: drop, never invent
-      out[code] = cleanLine(p, parsed[code]);
+      // No catalogue on this page is different from an unknown catalogue
+      // code. Preserve the line for the badge; product/quote pages load the
+      // catalogue and apply the stricter cleanLine validation.
+      out[code] = p ? cleanLine(p, parsed[code]) : cleanPortableLine(parsed[code]);
     });
     return out;
   }
