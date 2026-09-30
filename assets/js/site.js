@@ -1087,7 +1087,8 @@
           (url.pathname === location.pathname && url.search === location.search && url.hash)) return;
       e.preventDefault();
       document.documentElement.classList.add('page-is-leaving');
-      setTimeout(function () { location.href = url.href; }, 170);
+      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      setTimeout(function () { location.href = url.href; }, desktopPointer ? 180 : 170);
     });
   }
 

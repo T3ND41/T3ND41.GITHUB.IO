@@ -54,6 +54,21 @@ main{view-transition-name:page-content;animation:page-arrive .38s cubic-bezier(.
 @keyframes page-out{to{opacity:0;transform:translateY(-5px) scale(.995)}}
 @keyframes page-in{from{opacity:0;transform:translateY(10px) scale(.998)}to{opacity:1;transform:none}}
 .page-is-leaving main{opacity:0;transform:translateY(-5px);transition:opacity .17s ease,transform .17s ease}
+
+/* Desktop: keep the page change deliberately light. Only opacity and a
+   six-pixel translation are animated; the persistent header and navigation
+   are not captured or animated. Touch/mobile keeps its existing motion. */
+@media (hover:hover) and (pointer:fine){
+  main{animation:desktop-page-arrive .22s ease-out both}
+  .site-header,.hn-nav{view-transition-name:none}
+  ::view-transition-group(root){animation-duration:.2s;animation-timing-function:ease-out}
+  ::view-transition-old(page-content){animation:desktop-page-out .18s ease-out both}
+  ::view-transition-new(page-content){animation:desktop-page-in .22s ease-out both}
+  .page-is-leaving main{opacity:0;transform:translateY(-6px);transition:opacity .18s ease-out,transform .18s ease-out}
+}
+@keyframes desktop-page-arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes desktop-page-out{to{opacity:0;transform:translateY(-6px)}}
+@keyframes desktop-page-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){
   main{animation:none}
   .page-is-leaving main{transition:none}
