@@ -35,6 +35,7 @@
   --danger:#F08379;
 
   --r:12px; --r-lg:20px; --r-xl:26px;
+  --motion-half:.21s; --motion-beat:.42s; --motion-double:.84s; --motion-quad:1.68s;
   --blur:saturate(150%) blur(18px);
   --shadow:0 4px 18px rgba(0,0,0,.30);
   --shadow-lg:0 18px 44px rgba(0,0,0,.46);
@@ -43,12 +44,12 @@
   --ease:cubic-bezier(.4,1.25,.5,1);
 }
 @view-transition{navigation:auto}
-main{view-transition-name:page-content;animation:page-arrive .38s cubic-bezier(.22,.7,.2,1) both}
+main{view-transition-name:page-content;animation:page-arrive var(--motion-beat) cubic-bezier(.22,.7,.2,1) both}
 .site-header{view-transition-name:site-header}
 .hn-nav{view-transition-name:primary-nav}
-::view-transition-group(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,.7,.2,1)}
+::view-transition-group(root){animation-duration:var(--motion-beat);animation-timing-function:cubic-bezier(.22,.7,.2,1)}
 ::view-transition-old(page-content){animation:page-out .22s ease both}
-::view-transition-new(page-content){animation:page-in .42s cubic-bezier(.22,.7,.2,1) both}
+::view-transition-new(page-content){animation:page-in var(--motion-beat) cubic-bezier(.22,.7,.2,1) both}
 ::view-transition-old(site-header),::view-transition-new(site-header),::view-transition-old(primary-nav),::view-transition-new(primary-nav){animation-duration:.28s}
 @keyframes page-arrive{from{opacity:.2;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes page-out{to{opacity:0;transform:translateY(-5px) scale(.995)}}
@@ -59,11 +60,11 @@ main{view-transition-name:page-content;animation:page-arrive .38s cubic-bezier(.
    six-pixel translation are animated; the persistent header and navigation
    are not captured or animated. Touch/mobile keeps its existing motion. */
 @media (hover:hover) and (pointer:fine){
-  main{animation:desktop-page-arrive .22s ease-out both}
+  main{animation:desktop-page-arrive var(--motion-beat) ease-out both}
   .site-header,.hn-nav{view-transition-name:none}
-  ::view-transition-group(root){animation-duration:.2s;animation-timing-function:ease-out}
+  ::view-transition-group(root){animation-duration:var(--motion-beat);animation-timing-function:ease-out}
   ::view-transition-old(page-content){animation:desktop-page-out .18s ease-out both}
-  ::view-transition-new(page-content){animation:desktop-page-in .22s ease-out both}
+  ::view-transition-new(page-content){animation:desktop-page-in var(--motion-beat) ease-out both}
   .page-is-leaving main{opacity:0;transform:translateY(-6px);transition:opacity .18s ease-out,transform .18s ease-out}
 }
 @keyframes desktop-page-arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -90,20 +91,20 @@ body{
   position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
   background:radial-gradient(circle at 50% 46%,rgba(140,200,95,.12),transparent 34%),var(--ground-2);
   opacity:1;visibility:visible;pointer-events:auto;
-  transition:opacity .2s ease-out,visibility 0s linear .2s;
+  transition:opacity var(--motion-half) ease-out,visibility 0s linear var(--motion-half);
 }
 .site-loader.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
 .site-loader-mark{
   position:relative;width:clamp(138px,18vw,192px);aspect-ratio:1;
   display:grid;place-items:center;filter:drop-shadow(0 12px 18px rgba(0,0,0,.24));
-  animation:loader-logo-hop 1.15s cubic-bezier(.45,.05,.55,.95) infinite;
+  animation:loader-logo-hop var(--motion-double) cubic-bezier(.45,.05,.55,.95) infinite;
 }
 .site-loader-wheel,.site-loader-hat{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.site-loader-wheel{z-index:1;transform-origin:52.7% 64.8%;animation:loader-wheel-spin 2.2s linear infinite}
+.site-loader-wheel{z-index:1;transform-origin:52.7% 64.8%;animation:loader-wheel-spin var(--motion-quad) linear infinite}
 .site-loader-hat{z-index:2;transform:translateY(18px)}
 .site-loader-shadow{
   position:absolute;z-index:1;left:17%;right:17%;bottom:-9%;height:8%;border-radius:50%;
-  background:rgba(0,0,0,.5);filter:blur(9px);animation:loader-shadow-pulse 1.15s ease-in-out infinite;
+  background:rgba(0,0,0,.5);filter:blur(9px);animation:loader-shadow-pulse var(--motion-double) ease-in-out infinite;
 }
 @keyframes loader-logo-hop{
   0%,100%{transform:translateY(0) rotate(-1deg)}
@@ -954,18 +955,18 @@ body{padding-top:146px;padding-bottom:0}
   -webkit-backdrop-filter:blur(22px) saturate(1.35);backdrop-filter:blur(22px) saturate(1.35);
   display:flex;align-items:center;justify-content:center;color:var(--green-deep);
   box-shadow:0 8px 22px rgba(0,0,0,.24),inset 0 0 0 5px rgba(232,181,58,.18);z-index:3;pointer-events:none;
-  transition:left .42s cubic-bezier(.22,.78,.28,1);
+  transition:left var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
 .hn-puck .ico{width:36px;height:36px}
 .hn-puck::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:8px solid rgba(255,255,255,.72);z-index:-1}
 .hn-nav.is-hopping.is-forward .hn-puck{
-  animation:hn-nav-hop-forward .42s cubic-bezier(.22,.78,.28,1);
+  animation:hn-nav-hop-forward var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
 .hn-nav.is-hopping.is-backward .hn-puck{
-  animation:hn-nav-hop-backward .42s cubic-bezier(.22,.78,.28,1);
+  animation:hn-nav-hop-backward var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
 .hn-nav.is-hopping .hn-item.is-next{
-  animation:hn-nav-button-hop .42s cubic-bezier(.22,.78,.28,1);
+  animation:hn-nav-button-hop var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
 .hn-nav.is-hopping .hn-puck,.hn-nav.is-hopping .hn-item.is-next{will-change:transform}
 @keyframes hn-nav-hop-forward{

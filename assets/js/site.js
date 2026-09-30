@@ -1034,8 +1034,7 @@
       // Fast desktops need a little more time to display the hop before the
       // next document replaces the current one. Touch devices keep the faster
       // timing that already feels right on mobile.
-      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      setTimeout(function () { location.href = href; }, desktopPointer ? 350 : 240);
+      setTimeout(function () { location.href = href; }, 210);
     });
 
     document.addEventListener('quote:change', paint);
@@ -1075,6 +1074,8 @@
     var loader = document.getElementById('site-loader');
     if (!loader) return;
     var hidden = false;
+    var shownAt = performance.now();
+    var motionBeat = 420;
 
     function hideLoader() {
       if (hidden) return;
@@ -1091,8 +1092,7 @@
           (url.pathname === location.pathname && url.search === location.search && url.hash)) return;
       // Let the navigation button begin its hop before the overlay covers it.
       // Other links get only a tiny acknowledgement delay.
-      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      var delay = a.closest('.hn-nav') ? (desktopPointer ? 170 : 100) : 70;
+      var delay = a.closest('.hn-nav') ? motionBeat / 2 : motionBeat / 4;
       setTimeout(function () {
         hidden = false;
         loader.classList.remove('is-hidden');
@@ -1100,7 +1100,10 @@
     }
 
     window.addEventListener('load', function () {
-      requestAnimationFrame(function () { requestAnimationFrame(hideLoader); });
+      var remaining = Math.max(0, motionBeat - (performance.now() - shownAt));
+      setTimeout(function () {
+        requestAnimationFrame(function () { requestAnimationFrame(hideLoader); });
+      }, remaining);
     }, { once: true });
     window.addEventListener('pageshow', function (e) { if (e.persisted) hideLoader(); });
     document.addEventListener('click', showForNavigation, true);
@@ -1124,8 +1127,7 @@
           (url.pathname === location.pathname && url.search === location.search && url.hash)) return;
       e.preventDefault();
       document.documentElement.classList.add('page-is-leaving');
-      var desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      setTimeout(function () { location.href = url.href; }, desktopPointer ? 180 : 170);
+      setTimeout(function () { location.href = url.href; }, 210);
     });
   }
 
