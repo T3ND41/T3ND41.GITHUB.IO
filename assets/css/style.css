@@ -917,53 +917,51 @@ address{font-style:normal;line-height:1.75}
 }
 .hn-nav{
   --notch-x:50%;
-  --lift:42px;
+  --lift:35px;
   display:block;position:fixed;left:50%;width:min(720px,calc(100% - 28px));
   transform:translateX(-50%);
-  top:calc(16px + env(safe-area-inset-top));bottom:auto;
-  z-index:80;padding-top:var(--lift);transition:--notch-x .72s cubic-bezier(.22,.78,.28,1);
+  top:auto;bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:80;padding-top:var(--lift);transition:--notch-x var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
-body{padding-top:146px;padding-bottom:0}
+body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
 
 .hn-bar{
-  position:relative;height:88px;border-radius:20px;
-  background:rgba(244,250,240,.76);border:1px solid rgba(255,255,255,.88);
-  -webkit-backdrop-filter:blur(22px) saturate(1.35);backdrop-filter:blur(22px) saturate(1.35);
-  box-shadow:0 16px 42px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.72);
+  position:relative;height:82px;border-radius:25px;
+  background:#f8fbf6;border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 15px 34px rgba(2,13,7,.24),inset 0 1px 0 #fff;
   /* A broad elliptical cradle gives the active bubble a smooth, flowing seat.
      The feathered edge removes the harsh one-pixel rim of the old round cutout. */
-  -webkit-mask-image:radial-gradient(ellipse 62px 46px at var(--notch-x) 0,
-    transparent 0 42px,rgba(0,0,0,.14) 43px,rgba(0,0,0,.58) 45px,#000 47px);
-          mask-image:radial-gradient(ellipse 62px 46px at var(--notch-x) 0,
-    transparent 0 42px,rgba(0,0,0,.14) 43px,rgba(0,0,0,.58) 45px,#000 47px);
+  -webkit-mask-image:radial-gradient(ellipse 67px 51px at var(--notch-x) 0,
+    transparent 0 43px,rgba(0,0,0,.2) 44px,rgba(0,0,0,.72) 47px,#000 49px);
+          mask-image:radial-gradient(ellipse 67px 51px at var(--notch-x) 0,
+    transparent 0 43px,rgba(0,0,0,.2) 44px,rgba(0,0,0,.72) 47px,#000 49px);
 }
-.hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:7px 8px 17px}
+.hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:9px 10px 12px}
 .hn-item{
   position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:5px;height:100%;padding:0 2px;
-  background:none;border:0;cursor:pointer;font-family:inherit;color:#657069;
+  justify-content:center;gap:3px;height:100%;padding:0 2px;
+  background:none;border:0;cursor:pointer;font-family:inherit;color:#34423a;
   text-decoration:none;-webkit-tap-highlight-color:transparent;
 }
-.hn-item:hover{text-decoration:none;color:var(--green-deep);background:rgba(140,200,95,.12);border-radius:14px}
+.hn-item:hover{text-decoration:none;color:var(--green-deep);background:rgba(95,168,60,.1);border-radius:16px}
 .hn-item .ico{width:26px;height:26px;display:block;transition:transform .28s var(--ease),opacity .2s,color .2s}
 .hn-search-item{border:0;background:transparent;font:inherit;cursor:pointer}
 .hn-search-item .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.hn-item .lbl{font-size:12px;font-weight:600;line-height:1;white-space:nowrap;transition:color .2s,font-weight .2s}
+.hn-item .lbl{font-size:11px;font-weight:700;line-height:1;white-space:nowrap;transition:color .2s,font-weight .2s}
 .hn-item:focus-visible{outline:3px solid var(--green);outline-offset:-5px;border-radius:14px}
-.hn-item[aria-current]{color:#121A16;justify-content:flex-end;padding-bottom:4px}
-.hn-item[aria-current] .lbl{font-weight:800;color:#121A16}
+.hn-item[aria-current]{color:#121A16;justify-content:flex-end;padding-bottom:2px}
+.hn-item[aria-current] .lbl{font-weight:800;color:#24352b}
 .hn-item[aria-current] .ico{opacity:0;transform:translateY(-10px) scale(.7)}
 
 .hn-puck{
-  position:absolute;top:0;left:var(--notch-x);width:78px;height:78px;margin-left:-39px;
-  border-radius:50%;background:rgba(245,251,241,.88);border:3px solid var(--green);
-  -webkit-backdrop-filter:blur(22px) saturate(1.35);backdrop-filter:blur(22px) saturate(1.35);
-  display:flex;align-items:center;justify-content:center;color:var(--green-deep);
-  box-shadow:0 8px 22px rgba(0,0,0,.24),inset 0 0 0 5px rgba(232,181,58,.18);z-index:3;pointer-events:none;
+  position:absolute;top:0;left:var(--notch-x);width:72px;height:72px;margin-left:-36px;
+  border-radius:50%;background:linear-gradient(145deg,#75cf48,#4d9730);border:6px solid #f8fbf6;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 9px 22px rgba(27,84,24,.34),inset 0 1px 0 rgba(255,255,255,.35);z-index:3;pointer-events:none;
   transition:left var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
-.hn-puck .ico{width:36px;height:36px}
-.hn-puck::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:8px solid rgba(255,255,255,.72);z-index:-1}
+.hn-puck .ico{width:31px;height:31px}
+.hn-puck::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,255,255,.92);z-index:-1}
 .hn-nav.is-hopping.is-forward .hn-puck{
   animation:hn-nav-hop-forward var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
@@ -1005,17 +1003,14 @@ body{padding-top:146px;padding-bottom:0}
 }
 .hn-item .hn-badge{top:10px;right:calc(50% - 20px)}
 .hn-puck .hn-badge{top:-3px;right:-5px;border-color:#fff}
-.hn-grip{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:138px;height:5px;border-radius:99px;background:var(--green-deep);z-index:1}
+.hn-grip{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);width:126px;height:4px;border-radius:99px;background:rgba(32,64,43,.2);z-index:1}
 @media (max-width:380px){
-  .hn-nav{width:calc(100% - 16px)}.hn-item .lbl{font-size:9.5px}.hn-puck{width:68px;height:68px;margin-left:-34px;top:7px}.hn-puck::after{inset:-7px;border-width:6px}
+  .hn-nav{width:calc(100% - 16px);bottom:calc(8px + env(safe-area-inset-bottom))}.hn-item .lbl{font-size:9px}.hn-puck{width:66px;height:66px;margin-left:-33px;top:4px}.hn-puck::after{inset:-6px}
   .hn-item .ico{width:23px;height:23px}.hn-grip{width:96px}
 }
 
-/* Preserve the glass treatment on smaller GPUs with less costly blur. */
-@media (max-width:700px){
-  .hn-bar,.hn-puck{-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
-  body::after{filter:blur(16px) saturate(.55) brightness(.42)}
-}
+/* Solid dock avoids live backdrop blur and keeps scrolling smooth. */
+@media (max-width:700px){body::after{filter:blur(12px) saturate(.55) brightness(.42)}}
 
 /* ==========================================================================
    Motion — content is visible at rest; this is arrival polish only
