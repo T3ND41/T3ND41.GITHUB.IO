@@ -929,12 +929,13 @@ body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
   position:relative;height:82px;border-radius:25px;
   background:#f8fbf6;border:1px solid rgba(255,255,255,.95);
   box-shadow:0 15px 34px rgba(2,13,7,.24),inset 0 1px 0 #fff;
-  /* A broad elliptical cradle gives the active bubble a smooth, flowing seat.
-     The feathered edge removes the harsh one-pixel rim of the old round cutout. */
-  -webkit-mask-image:radial-gradient(ellipse 67px 51px at var(--notch-x) 0,
-    transparent 0 43px,rgba(0,0,0,.2) 44px,rgba(0,0,0,.72) 47px,#000 49px);
-          mask-image:radial-gradient(ellipse 67px 51px at var(--notch-x) 0,
-    transparent 0 43px,rgba(0,0,0,.2) 44px,rgba(0,0,0,.72) 47px,#000 49px);
+  /* Deep, open cradle from the supplied reference. It is deliberately wider
+     than the active button, leaving a visible dark channel around the button. */
+  -webkit-mask-image:radial-gradient(ellipse 84px 59px at var(--notch-x) -2px,
+    transparent 0 51px,rgba(0,0,0,.18) 52px,rgba(0,0,0,.76) 55px,#000 57px);
+          mask-image:radial-gradient(ellipse 84px 59px at var(--notch-x) -2px,
+    transparent 0 51px,rgba(0,0,0,.18) 52px,rgba(0,0,0,.76) 55px,#000 57px);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
 }
 .hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:9px 10px 12px}
 .hn-item{
@@ -954,14 +955,14 @@ body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
 .hn-item[aria-current] .ico{opacity:0;transform:translateY(-10px) scale(.7)}
 
 .hn-puck{
-  position:absolute;top:0;left:var(--notch-x);width:72px;height:72px;margin-left:-36px;
-  border-radius:50%;background:linear-gradient(145deg,#75cf48,#4d9730);border:6px solid #f8fbf6;
+  position:absolute;top:3px;left:var(--notch-x);width:66px;height:66px;margin-left:-33px;
+  border-radius:50%;background:#69A73F;border:3px solid #DAB416;
   display:flex;align-items:center;justify-content:center;color:#fff;
-  box-shadow:0 9px 22px rgba(27,84,24,.34),inset 0 1px 0 rgba(255,255,255,.35);z-index:3;pointer-events:none;
+  box-shadow:0 9px 22px rgba(27,84,24,.38),inset 0 1px 0 rgba(255,255,255,.3);z-index:3;pointer-events:none;
   transition:left var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
 .hn-puck .ico{width:31px;height:31px}
-.hn-puck::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,255,255,.92);z-index:-1}
+.hn-puck::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(255,255,255,.28);z-index:-1}
 .hn-nav.is-hopping.is-forward .hn-puck{
   animation:hn-nav-hop-forward var(--motion-beat) cubic-bezier(.22,.78,.28,1);
 }
@@ -1005,7 +1006,7 @@ body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
 .hn-puck .hn-badge{top:-3px;right:-5px;border-color:#fff}
 .hn-grip{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);width:126px;height:4px;border-radius:99px;background:rgba(32,64,43,.2);z-index:1}
 @media (max-width:380px){
-  .hn-nav{width:calc(100% - 16px);bottom:calc(8px + env(safe-area-inset-bottom))}.hn-item .lbl{font-size:9px}.hn-puck{width:66px;height:66px;margin-left:-33px;top:4px}.hn-puck::after{inset:-6px}
+  .hn-nav{width:calc(100% - 16px);bottom:calc(8px + env(safe-area-inset-bottom))}.hn-item .lbl{font-size:9px}.hn-puck{width:62px;height:62px;margin-left:-31px;top:6px}.hn-puck::after{inset:-4px}
   .hn-item .ico{width:23px;height:23px}.hn-grip{width:96px}
 }
 
