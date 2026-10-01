@@ -929,12 +929,14 @@ body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
   position:relative;height:82px;border-radius:25px;
   background:#f8fbf6;border:1px solid rgba(255,255,255,.95);
   box-shadow:0 15px 34px rgba(2,13,7,.24),inset 0 1px 0 #fff;
-  /* Deep, open cradle from the supplied reference. It is deliberately wider
-     than the active button, leaving a visible dark channel around the button. */
-  -webkit-mask-image:radial-gradient(ellipse 84px 59px at var(--notch-x) -2px,
-    transparent 0 51px,rgba(0,0,0,.18) 52px,rgba(0,0,0,.76) 55px,#000 57px);
-          mask-image:radial-gradient(ellipse 84px 59px at var(--notch-x) -2px,
-    transparent 0 51px,rgba(0,0,0,.18) 52px,rgba(0,0,0,.76) 55px,#000 57px);
+  /* Compact fluid wave from the supplied motion reference: a deep centre
+     with softly rising shoulders that cradle the active circular button. */
+  -webkit-mask-image:radial-gradient(ellipse 92px 60px at var(--notch-x) -5px,
+    transparent 0 48px,rgba(0,0,0,.07) 50px,rgba(0,0,0,.3) 53px,
+    rgba(0,0,0,.7) 57px,#000 60px);
+          mask-image:radial-gradient(ellipse 92px 60px at var(--notch-x) -5px,
+    transparent 0 48px,rgba(0,0,0,.07) 50px,rgba(0,0,0,.3) 53px,
+    rgba(0,0,0,.7) 57px,#000 60px);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
 }
 .hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:9px 10px 12px}
