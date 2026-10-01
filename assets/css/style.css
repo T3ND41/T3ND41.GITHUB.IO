@@ -929,14 +929,14 @@ body{padding-top:0;padding-bottom:calc(132px + env(safe-area-inset-bottom))}
   position:relative;height:82px;border-radius:25px;
   background:#f8fbf6;border:1px solid rgba(255,255,255,.95);
   box-shadow:0 15px 34px rgba(2,13,7,.24),inset 0 1px 0 #fff;
-  /* Compact fluid wave from the supplied motion reference: a deep centre
-     with softly rising shoulders that cradle the active circular button. */
-  -webkit-mask-image:radial-gradient(ellipse 92px 60px at var(--notch-x) -5px,
-    transparent 0 48px,rgba(0,0,0,.07) 50px,rgba(0,0,0,.3) 53px,
-    rgba(0,0,0,.7) 57px,#000 60px);
-          mask-image:radial-gradient(ellipse 92px 60px at var(--notch-x) -5px,
-    transparent 0 48px,rgba(0,0,0,.07) 50px,rgba(0,0,0,.3) 53px,
-    rgba(0,0,0,.7) 57px,#000 60px);
+  /* Enlarged fluid wave: a deeper centre clears the floating button while
+     the long feathered shoulders blend the cradle back into the nav bar. */
+  -webkit-mask-image:radial-gradient(ellipse 106px 72px at var(--notch-x) -6px,
+    transparent 0 55px,rgba(0,0,0,.06) 57px,rgba(0,0,0,.25) 61px,
+    rgba(0,0,0,.62) 66px,rgba(0,0,0,.88) 69px,#000 72px);
+          mask-image:radial-gradient(ellipse 106px 72px at var(--notch-x) -6px,
+    transparent 0 55px,rgba(0,0,0,.06) 57px,rgba(0,0,0,.25) 61px,
+    rgba(0,0,0,.62) 66px,rgba(0,0,0,.88) 69px,#000 72px);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
 }
 .hn-items{position:absolute;inset:var(--lift) 0 0;display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:9px 10px 12px}
